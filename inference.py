@@ -27,7 +27,7 @@ def get_parser():
     parser = argparse.ArgumentParser(description='parameters to train net')
     parser.add_argument('--image_size', default=[112, 112], help='the image size')
     parser.add_argument('--embedding_size', type=int,
-                        help='Dimensionality of the embedding.', default=128)
+                        help='Dimensionality of the embedding.', default=512)
     parser.add_argument('--weight_decay', default=5e-5, help='L2 weight regularization.')
     parser.add_argument('--test_batch_size', type=int,
                         help='Number of images to process in a batch in the test set.', default=1)
@@ -40,7 +40,7 @@ def get_parser():
     parser.add_argument('--pretrained_model', type=str, default='./output/ckpt_best/tinymobilefacenet_best_ckpt',
                         help='Load a pretrained model before training starts.')
     parser.add_argument('--log_device_mapping', default=False, help='show device placement log')
-    parser.add_argument('--model_type', default=1, help='MobileFaceNet or TinyMobileFaceNet')
+    parser.add_argument('--model_type', default=0, help='MobileFaceNet or TinyMobileFaceNet')
 
     args = parser.parse_args()
     return args

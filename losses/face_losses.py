@@ -1,5 +1,6 @@
 import tensorflow as tf
 import math
+from losses import triplet_losses
 
 
 def insightface_loss(embedding, labels, out_num, w_init=None, s=64., m=0.5):
@@ -181,3 +182,32 @@ def cos_loss(x, y, num_cls, reuse=False, alpha=0.35, scale=64, name='cos_loss'):
     cos_loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(labels=y, logits=value))
 
     return cos_loss, value
+
+
+def triplet_loss(x, y, num_cls, margin, reuse=False, mode=0, name='triplet_loss'):
+    '''
+    x: B x D - features
+    y: B x 1 - labels
+    num_cls: 1 - total class number
+    alpah: 1 - margin
+    scale: 1 - scaling paramter
+    '''
+    # define the classifier weights
+    xs = x.get_shape()
+    with tf.variable_scope('centers_var', reuse=reuse) as center_scope:
+        w = tf.get_variable("centers", [xs[1], num_cls], dtype=tf.float32,
+                            initializer=tf.contrib.layers.xavier_initializer(), trainable=True)
+
+    x_feat_norm = tf.nn.l2_normalize(x, 1, 1e-10)
+    # (D,C)
+    w_feat_norm = tf.nn.l2_normalize(w, 0, 1e-10)
+
+    # get the scores after normalization
+    # (N,C)
+    xw_norm = tf.matmul(x_feat_norm, w_feat_norm)
+
+    if mode == 0:
+        triplet_loss, _ = triplet_losses.batch_all_triplet_loss(y, xw_norm, margin)
+    else:
+        triplet_loss = triplet_losses.batch_hard_triplet_loss(y, xw_norm, margin)
+    return triplet_loss, xw_norm

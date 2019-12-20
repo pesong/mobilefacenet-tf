@@ -34,7 +34,7 @@ def get_parser():
                         help='Dimensionality of the embedding.', default=512)
     parser.add_argument('--weight_decay', default=5e-5, help='L2 weight regularization.')
     parser.add_argument('--lr_schedule', help='Number of epochs for learning rate piecewise.', default=[4, 7, 9, 11])
-    parser.add_argument('--train_batch_size', default=10, help='batch size to train network')
+    parser.add_argument('--train_batch_size', default=32, help='batch size to train network')
     parser.add_argument('--test_batch_size', type=int,
                         help='Number of images to process in a batch in the test set.', default=100)
     parser.add_argument('--eval_datasets', default=['lfw', 'cfp_ff', 'cfp_fp', 'agedb_30'], help='evluation datasets')
@@ -255,7 +255,7 @@ if __name__ == '__main__':
                     # validate
                     if count > 0 and count % args.validate_interval == 0:
                         print('\nIteration', count, 'testing...')
-                        for db_index in range(len(ver_list)):
+                        for db_index in range(len(ver_list)):11
                             start_time = time.time()
                             data_sets, issame_list = ver_list[db_index]
                             emb_array = np.zeros((data_sets.shape[0], args.embedding_size))

@@ -132,11 +132,11 @@ def test_tfrecords():
     config = tf.ConfigProto(allow_soft_placement=True)
     sess = tf.Session(config=config)
     # training datasets api config
-    tfrecords_f = os.path.join(args.tfrecords_file_path, 'tran.tfrecords')
+    tfrecords_f = os.path.join(args.tfrecords_file_path, 'train-000.tfrecords')
     dataset = tf.data.TFRecordDataset(tfrecords_f)
     dataset = dataset.map(parse_function)
-    dataset = dataset.shuffle(buffer_size=20000)
-    dataset = dataset.batch(32)
+    dataset = dataset.shuffle(buffer_size=20)
+    dataset = dataset.batch(10)
     iterator = dataset.make_initializable_iterator()
     next_element = iterator.get_next()
     # begin iteration
